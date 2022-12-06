@@ -1,0 +1,247 @@
+---
+title: "STAT 383 Final Project"
+author: "Jack Talbot, Matthew Griffith, Ernesto Sola-Thomas, Adriana Zanone"
+date: "12/9/22"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Introduction and Background
+
+Like many other sports, soccer is a game where there are many opportunities for data to be collected and trends to be analyzed. When looking at data, trends can be formed between different players, positions, and location of the game. These trends can be used by coaches and managers in order to make decisions in attempts to improve their chances to win. An example of this could be comparing the performance of teams depending on the formation that they are playing in. This could let coaches choose better formations for their teams and improve their chances of winning more games. Our data set will include Premier League soccer players and we will be determining how performance changes according to age of the player. 
+
+After searching for similar research that relates to this project we found a study that relates age/size to power and accuracy of shots in soccer. The study was conducted at a Brazilian Soccer Academy and included 178 players between the ages of 10 and 20 years old. The study concluded that there was a positive correlation in age and the power and accuracy that the players were capable of. This makes sense because as the players gain more experience and grow they increase their skills. 
+
+The data was collected by a website called FootyStats.org. This website collects soccer data from all over the world in various different leagues. The data available dates back to the early 2000's and is observational data. The website also offers predictions of future games based on their statistical analysis. 
+
+The question of interest in this project is how does age affect players performance in Premier League Soccer. This will be determined by looking at variables such as minutes played, goals per match, cards per match, appearances per game, and rank in the league and comparing them to age. 
+
+
+# Methods and Results
+
+The data analyzed in this project is filtered so that we are only using forwards. Figure one is a histogram that illustrates how ages are distributed in this Premier League. 
+
+```{r}
+#Pulling the File
+library(readxl)
+Premier_League <- read_excel("D:/My_DevOps/Fall_2022/STAT383/Project/England_Premier_League_Soccer_Data.xlsx")
+### This path needs to match your local path.
+
+PremierF <- subset(Premier_League, position == 'Forward')
+PremierF_omit <- na.omit(PremierF)
+
+library(ggplot2)
+library(tidyverse)
+
+#Histogram of Forwards
+ggplot(PremierF_omit, aes(x = age))+
+  geom_histogram(bandwith = 1,
+               col = 'Black',
+               fill = "grey")+
+  labs(title = "Age of Premier League Soccer Forwards in 2018-2019",
+       x = "age",
+       y = "Number of Players")
+```
+
+
+```{r}
+#Age vs Goals
+
+ggplot(PremierF_omit, aes(age,goals_overall))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(
+    title = "Age vs Goals Scored"
+  )
+
+```
+
+```{r}
+#Age vs Minutes Played
+
+ggplot(PremierF_omit, aes(age,minutes_played_overall))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(
+    title = "Age vs Minutes Played"
+  )
+
+```
+```{r}
+#Age vs Cards
+
+ggplot(PremierF_omit, aes(age, yellow_cards_overall))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(
+    title = "Age vs Yellow Cards Received"
+  )
+```
+```{r}
+#Age vs Minutes Played
+
+ggplot(PremierF_omit, aes(age, rank_in_league_top_attackers))+
+  geom_point()+
+  geom_smooth(method=lm, col = 'red')+
+  labs(
+    title = "Age vs Foward Rank"
+  )
+```
+```{r}
+#Age vs Minutes Played
+
+ggplot(PremierF_omit, aes(age, assists_overall))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(
+    title = "Age vs Assists"
+  )
+```
+```{r}
+
+#Age vs Yellow Cards
+
+ggplot(PremierF_omit, aes(age, yellow_cards_overall))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(
+    title = "Age vs Yellow Cards"
+  )
+```
+```{r}
+
+#Age vs Red Cards
+
+ggplot(PremierF_omit, aes(age, red_cards_overall))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(
+    title = "Age vs Red Cards"
+  )
+```
+```{r}
+
+#Age vs Top Attackers
+
+ggplot(PremierF_omit, aes(age, rank_in_league_top_attackers))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(
+    title = "Age vs Top Attackers"
+  )
+```
+```{r}
+
+#Age vs Goals Assumption Tests
+
+Age_vs_Goals_RF <- lm(PremierF_omit$age ~ PremierF_omit$goals_overall)
+plot(Age_vs_Goals_RF, which = 1)+
+  title("Age vs Goals", adj = 0)
+```
+```{r}
+Age_vs_Goals_QQ <- lm(PremierF_omit$age ~ PremierF_omit$goals_overall)
+plot(Age_vs_Goals_QQ, which = 2)+
+  title("Age vs Goals", adj = 0)
+```
+```{r} 
+Age_vs_Goals_RRF <- lm(PremierF_omit$age ~ PremierF_omit$goals_overall)
+plot(Age_vs_Goals_RRF, which = 3)+
+  title("Age vs Goals", adj = 0)
+```
+
+```{r}
+#Age vs Minutes Assumption Tests
+
+Age_vs_Minutes_RF <- lm(PremierF_omit$age ~ PremierF_omit$minutes_played_overall)
+plot(Age_vs_Minutes_RF, which = 1)+
+  title("Age vs Minutes", adj = 0)
+```
+```{r}
+Age_vs_Minutes_QQ <- lm(PremierF_omit$age ~ PremierF_omit$minutes_played_overall)
+plot(Age_vs_Minutes_QQ, which = 2)+
+  title("Age vs Minutes", adj = 0)
+```
+```{r}
+Age_vs_Minutes_RRF <- lm(PremierF_omit$age ~ PremierF_omit$minutes_played_overall)
+plot(Age_vs_Minutes_RRF, which = 3)+
+  title("Age vs Minutes", adj = 0)
+```
+
+```{r}
+#Age vs Yellow Cards Assumption Tests
+Age_vs_Yellow_Cards_RF <- lm(PremierF_omit$age ~ PremierF_omit$yellow_cards_overall)
+plot(Age_vs_Yellow_Cards_RF, which = 1)+
+  title("Age vs Yellow Cards", adj = 0)
+```
+```{r}
+Age_vs_Yellow_Cards_QQ <- lm(PremierF_omit$age ~ PremierF_omit$yellow_cards_overall)
+plot(Age_vs_Yellow_Cards_QQ, which = 2)+
+  title("Age vs Yellow Cards", adj = 0)
+```
+```{r}
+Age_vs_Yellow_Cards_RRF <- lm(PremierF_omit$age ~ PremierF_omit$yellow_cards_overall)
+plot(Age_vs_Yellow_Cards_RRF, which = 3)+
+  title("Age vs Yellow Cards", adj = 0)
+```
+
+```{r}
+#Age vs Assists Assumption Tests
+
+Age_vs_Assists_RF <- lm(PremierF_omit$age ~ PremierF_omit$assists_overall)
+plot(Age_vs_Assists_RF, which = 1)+
+  title("Age vs Assists", adj = 0)
+```
+```{r}
+Age_vs_Assists_QQ<- lm(PremierF_omit$age ~ PremierF_omit$assists_overall)
+plot(Age_vs_Assists_QQ, which = 2)+
+  title("Age vs Assists", adj = 0)
+```
+```{r}
+Age_vs_Assists_RRF <- lm(PremierF_omit$age ~ PremierF_omit$assists_overall)
+plot(Age_vs_Assists_RRF, which = 3)+
+  title("Age vs Assists", adj = 0)
+```
+
+```{r}
+#Age vs Yellow Cards Assumption Tests
+Age_vs_Yellow_Cards_RF <- lm(PremierF_omit$age ~ PremierF_omit$yellow_cards_overall)
+plot(Age_vs_Yellow_Cards_RF, which = 1)+
+  title("Age vs Yellow Cards", adj = 0)
+```
+```{r}
+Age_vs_Yellow_Cards_QQ <- lm(PremierF_omit$age ~ PremierF_omit$yellow_cards_overall)
+plot(Age_vs_Yellow_Cards_QQ, which = 2)+
+  title("Age vs Yellow Cards", adj = 0)
+```
+```{r}
+Age_vs_Yellow_Cards_RRF <- lm(PremierF_omit$age ~ PremierF_omit$yellow_cards_overall)
+plot(Age_vs_Yellow_Cards_RRF, which = 3)+
+  title("Age vs Yellow Cards", adj = 0)
+```
+
+```{r}
+#Age vs Assists Assumption Tests
+
+Age_vs_Assists_RF <- lm(PremierF_omit$age ~ PremierF_omit$assists_overall)
+plot(Age_vs_Assists_RF, which = 1)+
+  title("Age vs Assists", adj = 0)
+```
+```{r}
+Age_vs_Assists_QQ<- lm(PremierF_omit$age ~ PremierF_omit$assists_overall)
+plot(Age_vs_Assists_QQ, which = 2)+
+  title("Age vs Assists", adj = 0)
+```
+```{r}
+Age_vs_Assists_RRF <- lm(PremierF_omit$age ~ PremierF_omit$assists_overall)
+plot(Age_vs_Assists_RRF, which = 3)+
+  title("Age vs Assists", adj = 0)
+```
+## Hypothesis Test
+
+
+
+# Conclusions
+
+
+# References {-}
